@@ -1,0 +1,24 @@
+{
+  "name": "sixdegrees",
+  "version": "0.0.0",
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-html-replace": "^1.4.4",
+    "gulp-react": "^3.0.1",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.1.0",
+    "reactify": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^2.4.0"
+  },
+  "description": "The Movie Buffs Game!",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ori Harel",
+  "license": "ISC"
+}
