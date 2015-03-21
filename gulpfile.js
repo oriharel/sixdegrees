@@ -6,11 +6,16 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var reactify = require('reactify');
 var streamify = require('gulp-streamify');
+var sass = require('gulp-sass');
+var $ = require('gulp-load-plugins')();
 
 var path = {
   HTML: 'src/index.html',
+  SCSS: './src/styles/*.scss',
   MINIFIED_OUT: 'build.min.js',
   OUT: 'build.js',
+  FONTS: 'src/fonts/**',
+  IMAGES: 'src/images/**/*',
   DEST: 'dist',
   DEST_BUILD: 'dist/build',
   DEST_SRC: 'dist/src',
@@ -22,8 +27,35 @@ gulp.task('copy', function(){
     .pipe(gulp.dest(path.DEST));
 });
 
+gulp.task('sass', function () {
+    gulp.src(path.SCSS)
+        .pipe(sass())
+        .pipe(gulp.dest('dist/css'));
+});
+
+// Copy Web Fonts To Dist
+gulp.task('fonts', function () {
+  return gulp.src(path.FONTS)
+    .pipe(gulp.dest('dist/fonts'))
+    .pipe($.size({title: 'fonts'}));
+});
+
+// Optimize Images
+gulp.task('images', function () {
+  return gulp.src(path.IMAGES)
+    .pipe($.cache($.imagemin({
+      progressive: true,
+      interlaced: true
+    })))
+    .pipe(gulp.dest('dist/images'))
+    .pipe($.size({title: 'images'}));
+});
+
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy']);
+  gulp.watch(path.SCSS, ['sass']);
+  gulp.watch(path.FONTS, ['fonts']);
+  gulp.watch(path.IMAGES, ['images']);
 
   var watcher  = watchify(browserify({
     entries: [path.ENTRY_POINT],
@@ -43,7 +75,7 @@ gulp.task('watch', function() {
     .pipe(gulp.dest(path.DEST_SRC));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['fonts', 'images', 'sass', 'watch']);
 
 gulp.task('build', function(){
   browserify({
