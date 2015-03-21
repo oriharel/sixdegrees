@@ -20,10 +20,17 @@
   },
   "description": "The Movie Buffs Game!",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "react": "^0.13.1",
+    "react-autocomplete": "0.0.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ori Harel",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oriharel/sixdegrees.git"
+  }
 }
