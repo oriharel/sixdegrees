@@ -75,7 +75,7 @@ gulp.task('watch', function() {
     .pipe(gulp.dest(path.DEST_SRC));
 });
 
-gulp.task('default', ['fonts', 'images', 'sass', 'watch']);
+gulp.task('default', ['fonts', 'images', 'sass', 'copy', 'watch']);
 
 gulp.task('build', function(){
   browserify({
