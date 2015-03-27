@@ -1,13 +1,48 @@
 var React = require('react');
+var Select = require('react-select');
+
 var ActorSelection = React.createClass({
+
+	loadOptions: function(input, callback) {
+
+		input = input.toLowerCase();
+
+		if (input.length) {
+			$.ajax({
+		      url: 'http://api.themoviedb.org/3/search/person',
+		      dataType: 'json',
+		      data: {
+				api_key: '4824a0c20d8b1bf69548c63dbb66bc10',
+				query: input,
+				search_type: "ngram"
+			  },
+		      success: function(data) {
+		        var ret = data.results.map(function(person) {
+		        	return {
+								label: person.name,
+								value: JSON.stringify(person),
+								id: person.id
+							}
+		        });
+		        callback(null, {options: ret});
+		      }.bind(this),
+		      error: function(xhr, status, err) {
+		        console.error(this.props.data.url, status, err.toString());
+		      }.bind(this)
+		    });
+		}
+	},
 
 	render: function() {
 		return (
 					<div className="actor-component">
 						<img src={this.props.data.imageUrl}/>
 						<div className="actor-input-div">
-							<input type="text" className="actor-input" value={this.props.data.actorName}/>
-							<a className="icon-clear"></a>
+							<Select
+							    className="actor-select"
+							    asyncOptions={this.loadOptions}
+							    onChange={this.props.onChange}
+							/>
 						</div>
 					</div>
 				)
@@ -16,20 +51,35 @@ var ActorSelection = React.createClass({
 
 var StartPage = React.createClass({
 	getInitialState: function() {
-	    return {data: {
+	    return {
     			actor1: {imageUrl: "https://image.tmdb.org/t/p/w185/p1uCaOjxSC1xS5TgmD4uloAkbLd.jpg", actorName: "Kevin Bacon"},
     			actor2: {imageUrl: "https://image.tmdb.org/t/p/w185/cdowETe1PgXLjo72hDb7R7tyavf.jpg", actorName: "Kevin Spacey"}
-    		   }};
-	  },
+    		   };
+  	},
+
+  	onChange1: function(actorStr) {
+		var actorObj = JSON.parse(actorStr);
+		console.log('actor1 id is: '+actorObj.id);
+		var selectedActor = {actorName: actorObj.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actorObj.profile_path};
+		this.setState({actor1: selectedActor});
+	},
+
+	onChange2: function(actorStr) {
+		var actorObj = JSON.parse(actorStr);
+		console.log('actor2 id is: '+actorObj.id);
+		var selectedActor = {actorName: actorObj.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actorObj.profile_path};
+		this.setState({actor2: selectedActor});
+	},
+
 	render: function(){
 		return (
 				<div id="actorsSelectionContainer">
-					<div id="actor1" className="actor-div"><ActorSelection data={this.state.data.actor1}/></div>
+					<div id="actor1" className="actor-div"><ActorSelection data={this.state.actor1} onChange={this.onChange1}/></div>
 					<div id="buttonsDiv">
 						<a href="#chooseRandom" className="button-primary">Random</a>
 						<a href="#play" className="button-secondary">Play!</a>
 					</div>
-					<div id="actor2" className="actor-div"><ActorSelection data={this.state.data.actor2}/></div>
+					<div id="actor2" className="actor-div"><ActorSelection data={this.state.actor2} onChange={this.onChange2}/></div>
 				</div>
 			)
 	}

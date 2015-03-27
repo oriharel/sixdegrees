@@ -22,7 +22,7 @@
   "main": "gulpfile.js",
   "dependencies": {
     "react": "^0.13.1",
-    "react-autocomplete": "0.0.2"
+    "react-select": "^0.4.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
