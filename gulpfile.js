@@ -75,6 +75,22 @@ gulp.task('watch', function() {
     .pipe(gulp.dest(path.DEST_SRC));
 });
 
+// gulp.task('generate-service-worker', function(callback) {
+//   var fs = require('fs');
+//   var path = require('path');
+//   var swPrecache = require('sw-precache');
+//   var rootDir = 'src/js';
+
+//   swPrecache({
+//     stripPrefix: 'http://api.themoviedb.org/3/person/popular'
+//   }, function(error, swFileContents) {
+//     if (error) {
+//       return callback(error);
+//     }
+//     fs.writeFile(path.join(rootDir, 'service-worker.js'), swFileContents, callback);
+//   });
+// });
+
 gulp.task('default', ['fonts', 'images', 'sass', 'copy', 'watch']);
 
 gulp.task('build', function(){

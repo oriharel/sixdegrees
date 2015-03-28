@@ -1,5 +1,6 @@
 var React = require('react');
 var Select = require('react-select');
+var apiKey = "4824a0c20d8b1bf69548c63dbb66bc10"
 
 var ActorSelection = React.createClass({
 
@@ -12,7 +13,7 @@ var ActorSelection = React.createClass({
 		      url: 'http://api.themoviedb.org/3/search/person',
 		      dataType: 'json',
 		      data: {
-				api_key: '4824a0c20d8b1bf69548c63dbb66bc10',
+				api_key: apiKey,
 				query: input,
 				search_type: "ngram"
 			  },
@@ -37,6 +38,7 @@ var ActorSelection = React.createClass({
 		return (
 					<div className="actor-component">
 						<img src={this.props.data.imageUrl}/>
+						<div className="actor-name">{this.props.data.actorName}</div>
 						<div className="actor-input-div">
 							<Select
 							    className="actor-select"
@@ -53,9 +55,48 @@ var StartPage = React.createClass({
 	getInitialState: function() {
 	    return {
     			actor1: {imageUrl: "https://image.tmdb.org/t/p/w185/p1uCaOjxSC1xS5TgmD4uloAkbLd.jpg", actorName: "Kevin Bacon"},
-    			actor2: {imageUrl: "https://image.tmdb.org/t/p/w185/cdowETe1PgXLjo72hDb7R7tyavf.jpg", actorName: "Kevin Spacey"}
+    			actor2: {imageUrl: "https://image.tmdb.org/t/p/w185/cdowETe1PgXLjo72hDb7R7tyavf.jpg", actorName: "Kevin Spacey"},
+    			popular: [],
+    			randomClass: "button-primary"
     		   };
   	},
+
+  	componentDidMount: function() {
+  		for (var i = 1; i < 14; i++) {
+  			$.ajax({
+		      url: this.props.url,
+		      dataType: 'json',
+		      data: {
+				api_key: apiKey,
+				page: i
+			  },
+		      success: function(data) {
+		      	var existingPopular = this.state.popular;
+		      	var newPopular = existingPopular.concat(data.results);
+		        this.setState({popular: newPopular});
+		        console.log('we have '+this.state.popular.length+' popular actors');
+		        if (this.state.popular.length === 260) {
+		        	this.setState({randomClass: 'button-primary active'})
+		        }
+		      }.bind(this),
+		      error: function(xhr, status, err) {
+		        console.error(this.props.url, status, err.toString());
+		      }.bind(this)
+		    });
+  		}
+  		
+    },
+
+    generateRandom: function() {
+    	console.log('generate random from: '+this.state.popular.length);
+    	var actor1 = this.state.popular[Math.floor(Math.random()*this.state.popular.length)];
+    	var actor2= this.state.popular[Math.floor(Math.random()*this.state.popular.length)];
+
+    	var selectedActor1 = {actorName: actor1.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor1.profile_path};
+    	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path};
+
+		this.setState({actor1: selectedActor1, actor2: selectedActor2});
+    },
 
   	onChange1: function(actorStr) {
 		var actorObj = JSON.parse(actorStr);
@@ -76,7 +117,7 @@ var StartPage = React.createClass({
 				<div id="actorsSelectionContainer">
 					<div id="actor1" className="actor-div"><ActorSelection data={this.state.actor1} onChange={this.onChange1}/></div>
 					<div id="buttonsDiv">
-						<a href="#chooseRandom" className="button-primary">Random</a>
+						<a href="#chooseRandom" className={this.state.randomClass} onClick={this.generateRandom}>Random</a>
 						<a href="#play" className="button-secondary">Play!</a>
 					</div>
 					<div id="actor2" className="actor-div"><ActorSelection data={this.state.actor2} onChange={this.onChange2}/></div>
@@ -85,4 +126,4 @@ var StartPage = React.createClass({
 	}
 })
 
-React.render(<StartPage />, document.body);
+React.render(<StartPage url="http://api.themoviedb.org/3/person/popular"/>, document.body);
