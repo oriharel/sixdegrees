@@ -1,5 +1,7 @@
 var React = require('react');
-
+var Router = require('react-router');
+var Link = Router.Link;
+var GameActions = require('./GameActions');
 var Select = require('react-select');
 var apiKey = "4824a0c20d8b1bf69548c63dbb66bc10"
 
@@ -75,7 +77,6 @@ var StartPage = React.createClass({
 		      	var existingPopular = this.state.popular;
 		      	var newPopular = existingPopular.concat(data.results);
 		        this.setState({popular: newPopular});
-		        console.log('we have '+this.state.popular.length+' popular actors');
 		        if (this.state.popular.length === 260) {
 		        	this.setState({randomClass: 'button-primary active'})
 		        }
@@ -90,8 +91,10 @@ var StartPage = React.createClass({
 
     generateRandom: function() {
     	console.log('generate random from: '+this.state.popular.length);
-    	var actor1 = this.state.popular[Math.floor(Math.random()*this.state.popular.length)];
-    	var actor2= this.state.popular[Math.floor(Math.random()*this.state.popular.length)];
+    	// var ceiling = this.state.popular.length;
+    	var ceiling = 50;
+    	var actor1 = this.state.popular[Math.floor(Math.random()*ceiling)];
+    	var actor2= this.state.popular[Math.floor(Math.random()*ceiling)];
 
     	var selectedActor1 = {actorName: actor1.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor1.profile_path};
     	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path};
@@ -113,13 +116,17 @@ var StartPage = React.createClass({
 		this.setState({actor2: selectedActor});
 	},
 
+	beforePlay: function() {
+		GameActions.addActors(this.state);
+	},
+
 	render: function(){
 		return (
 				<div id="actorsSelectionContainer">
 					<div id="actor1" className="actor-div"><ActorSelection data={this.state.actor1} onChange={this.onChange1}/></div>
 					<div id="buttonsDiv">
 						<a href="#" className={this.state.randomClass} onClick={this.generateRandom}>Random</a>
-						<a href="#play" className="button-secondary">Play!</a>
+						<Link to="play" onClick={this.beforePlay}>Play!</Link>
 					</div>
 					<div id="actor2" className="actor-div"><ActorSelection data={this.state.actor2} onChange={this.onChange2}/></div>
 				</div>
