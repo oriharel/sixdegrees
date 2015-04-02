@@ -19,12 +19,12 @@ var App = React.createClass({
 })
 
 var routes = (
-  <Route name="app" path="/" handler={App}>
+  <Route name="app" path="/sixdegrees/" handler={App}>
 	<Route name="play" handler={Play}/>  
     <DefaultRoute handler={StartPage}/>
   </Route>
 );
 
-Router.run(routes, function (Handler) {
+Router.run(routes, Router.HistoryLocation, function (Handler) {
   React.render(<Handler/>, document.body);
 });

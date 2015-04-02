@@ -129,6 +129,42 @@ body {
 	}
 }
 
+.play-container {
+	display: flex;
+  	width: 20%;
+  	margin: 0 auto;
+
+	.chain-container {
+		width: 100px;
+		flex: 1;
+		display: flex;
+	}
+
+	.actor-chain {
+		width: 80px;
+		height: 120px;
+	}
+
+	.step {
+		display: flex;
+		align-self: center;
+		width: 21px;
+		justify-content: space-between;
+		padding: 0 3px;
+
+		.step-rect {
+			width: 5px;
+			height: 5px;
+			border-radius: 11px;
+			background-color: grey;
+		}
+	}
+}
+
+.query-container {
+	margin-top: 20px;
+}
+
 .icon-clear {
 	background: url('../images/close.png') no-repeat 0 0;
 	height: 14px;
