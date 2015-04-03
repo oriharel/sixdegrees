@@ -28,13 +28,16 @@ var StartPage = React.createClass({
 	    return {
     			actor1: {imageUrl: "", actorName: "", actorId: ""},
     			actor2: {imageUrl: "", actorName: "", actorId: ""},
-    			randomClass: this.state.popularActors.length ? "button-primary active": "button-primary",
+    			randomClass: "button-primary",
     			steps: [{id: 'first-step'}]
     		   };
   	},
 
   	componentDidMount: function() {
-  		
+  		if (this.state.popularActors.length > 0) {
+  			this.setState({randomClass: "button-primary active"})
+  			this.generateRandom();
+  		}
     },
 
     generateRandom: function() {
