@@ -21,8 +21,8 @@ var ActorSelection = React.createClass({
 var StartPage = React.createClass({
 	getInitialState: function() {
 	    return {
-    			actor1: {imageUrl: "https://image.tmdb.org/t/p/w185/p1uCaOjxSC1xS5TgmD4uloAkbLd.jpg", actorName: "Kevin Bacon", actorId: "4724"},
-    			actor2: {imageUrl: "https://image.tmdb.org/t/p/w185/cdowETe1PgXLjo72hDb7R7tyavf.jpg", actorName: "Kevin Spacey", actorId: "1218971"},
+    			actor1: {imageUrl: "", actorName: "", actorId: ""},
+    			actor2: {imageUrl: "", actorName: "", actorId: ""},
     			popular: [],
     			randomClass: "button-primary",
     			steps: [{id: 'first-step'}]
@@ -69,7 +69,7 @@ var StartPage = React.createClass({
     	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path, actorID: actor2.id};
 
 		this.setState({actor1: selectedActor1, actor2: selectedActor2});
-		GameActions.addActors({actor1: this.state.actor1, actor2: this.state.actor2});
+		GameActions.addActors({actor1: selectedActor1, actor2: selectedActor2});
     },
 
   	onChange1: function(actorStr) {

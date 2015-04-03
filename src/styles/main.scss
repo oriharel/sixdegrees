@@ -161,9 +161,22 @@ body {
 	}
 }
 
-.query-container {
-	margin-top: 20px;
+.query-section {
+	display: flex;
+	.query-container {
+		margin-top: 20px;
+	}
+
+	.moviesList {
+		list-style: none;
+
+		.movieItem {
+			display: flex;
+		}
+	}	
 }
+
+
 
 .icon-clear {
 	background: url('../images/close.png') no-repeat 0 0;

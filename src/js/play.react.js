@@ -52,7 +52,17 @@ var QueriedActorMovies = React.createClass( {
 
 		if (this.props.movies) {
 			moviesElements = this.props.movies.map(function(movie) {
-						return (<li className="movieItem" key={movie.id}>{movie.title}</li>);
+						var posterPath = "https://image.tmdb.org/t/p/w92/"+movie.poster_path;
+						return (<li className="movieItem" key={movie.id}>
+									<div className="movie-image">
+										<img src={posterPath}></img>
+									</div>
+									<div className="movieDetails">
+										<div className="movie-title">{movie.title}</div>
+										<div className="movie-title">{movie.release_date}</div>
+									</div>
+									
+								</li>);
 					})
 		}
 		else {
@@ -101,7 +111,7 @@ var QuerySection = React.createClass( {
 
 	render: function() {
 		return (
-			<div>
+			<div className="query-section">
 				<QueriedActor imageUrl={this.state.gameData.actor1.imageUrl} actorName={this.state.gameData.actor1.actorName} />
 				<QueriedActorMovies movies={this.state.queriedActorMovies} />
 				<QueriedMovie />
