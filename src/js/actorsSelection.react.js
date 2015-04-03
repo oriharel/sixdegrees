@@ -2,9 +2,10 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 var GameActions = require('./GameActions');
+var Reflux = require('reflux');
+var ActorsStore = require('./actorsStore');
 var Select = require('react-select');
 var Constants = require('./Constants');
-// var apiKey = "4824a0c20d8b1bf69548c63dbb66bc10"
 
 var ActorSelection = React.createClass({
 
@@ -19,51 +20,27 @@ var ActorSelection = React.createClass({
 })
 
 var StartPage = React.createClass({
+
+	mixins: [Reflux.connect(ActorsStore, "popularActors")],
+
 	getInitialState: function() {
+		console.log('StartPage getInitialState started');
 	    return {
     			actor1: {imageUrl: "", actorName: "", actorId: ""},
     			actor2: {imageUrl: "", actorName: "", actorId: ""},
-    			popular: [],
-    			randomClass: "button-primary",
+    			randomClass: this.state.popularActors.length ? "button-primary active": "button-primary",
     			steps: [{id: 'first-step'}]
     		   };
   	},
 
   	componentDidMount: function() {
-  		// return;
-
-  		//TODO - obviesly need to cache stuff here and load quickly
-  		for (var i = 1; i < 50; i++) {
-  			$.ajax({
-		      url: "http://api.themoviedb.org/3/person/popular",
-		      dataType: 'json',
-		      data: {
-				api_key: Constants.API_KEY,
-				page: i
-			  },
-		      success: function(data) {
-		      	var existingPopular = this.state.popular;
-		      	var newPopular = existingPopular.concat(data.results);
-		        this.setState({popular: newPopular});
-		        // console.log('num of people: '+this.state.popular.length);
-		        if (this.state.popular.length === 980) {
-		        	this.setState({randomClass: 'button-primary active'})
-		        }
-		      }.bind(this),
-		      error: function(xhr, status, err) {
-		        console.error(this.props.url, status, err.toString());
-		      }.bind(this)
-		    });
-  		}
   		
     },
 
     generateRandom: function() {
-    	// console.log('generate random from: '+this.state.popular.length);
-    	// var ceiling = this.state.popular.length;
-    	var ceiling = 50;
-    	var actor1 = this.state.popular[Math.floor(Math.random()*ceiling)];
-    	var actor2 = this.state.popular[Math.floor(Math.random()*ceiling)];
+    	var ceiling = 950;
+    	var actor1 = this.state.popularActors[Math.floor(Math.random()*ceiling)];
+    	var actor2 = this.state.popularActors[Math.floor(Math.random()*ceiling)];
 
     	var selectedActor1 = {actorName: actor1.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor1.profile_path, actorId: actor1.id};
     	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path, actorID: actor2.id};
@@ -85,11 +62,6 @@ var StartPage = React.createClass({
 		var selectedActor = {actorName: actorObj.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actorObj.profile_path};
 		this.setState({actor2: selectedActor});
 	},
-
-	// beforePlay: function() {
-		// console.log('calling addActors actions from component');
-		
-	// },
 
 	render: function(){
 		return (
