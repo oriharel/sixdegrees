@@ -1,6 +1,7 @@
 var Reflux = require('reflux');
 var GameActions = require('./GameActions');
 var Constants = require('./Constants');
+var moment = require('moment');
 
 var GameStore = Reflux.createStore({
 
@@ -27,9 +28,28 @@ var GameStore = Reflux.createStore({
 				api_key: Constants.API_KEY
 			  },
 		      success: function(data) {
-		      	var castedMovied = data.cast;
+		      	var castedMovied = data.cast, unsortedList;
 
-		      	that.gameData.sourceActorMovies = castedMovied;
+		      	unsortedList = castedMovied.map(function(movie) {
+		      		var momentDate = moment(movie.release_date);
+		      		return {
+		      			id: movie.id,
+		      			title: movie.title,
+		      			release_date: momentDate.year(),
+		      			posterPath: movie.poster_path !== null ? "https://image.tmdb.org/t/p/w92"+movie.poster_path : './images/movie-no-image.png'
+		      		}
+		      	});
+
+		      	that.gameData.sourceActorMovies = unsortedList.sort(function(movie1, movie2) {
+		      		if (movie1.release_date < movie2.release_date) {
+		      			return 1;
+		      		}
+		      		if (movie1.release_date > movie2.release_date) {
+		      			return -1;
+		      		}
+
+		      		return 0;
+		      	});
 		      	that.trigger(that.gameData);
 
 		      }.bind(this),

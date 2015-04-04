@@ -25,12 +25,19 @@ var Chain = React.createClass({
 		// })
 		return (
 				<div className="play-container">
-					<img className="actor-chain" src={this.state.gameData.actor1.imageUrl}/>
+					<div className="actor-chain">
+						<img src={this.state.gameData.actor1.imageUrl}/>
+						<div className="chain-actor-name">{this.state.gameData.actor1.actorName}</div>
+					</div>
+					
 					<EdgeStep />
 					<div className="chain-container">
 					</div>
 					<EdgeStep />
-					<img className="actor-chain" src={this.state.gameData.actor2.imageUrl}/>
+					<div className="actor-chain">
+						<img src={this.state.gameData.actor2.imageUrl}/>
+						<div className="chain-actor-name">{this.state.gameData.actor2.actorName}</div>
+					</div>
 				</div>
 			);
 	}
@@ -53,14 +60,14 @@ var QueriedActorMovies = React.createClass( {
 
 		if (this.props.movies) {
 			moviesElements = this.props.movies.map(function(movie) {
-						var posterPath = "https://image.tmdb.org/t/p/w92/"+movie.poster_path;
+
 						return (<li className="movieItem" key={movie.id}>
 									<div className="movie-image">
-										<img src={posterPath}></img>
+										<img src={movie.posterPath}></img>
 									</div>
 									<div className="movieDetails">
 										<div className="movie-title">{movie.title}</div>
-										<div className="movie-title">{movie.release_date}</div>
+										<div className="movie-title">({movie.release_date})</div>
 									</div>
 									
 								</li>);
