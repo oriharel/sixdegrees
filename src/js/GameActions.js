@@ -1,7 +1,8 @@
 var Reflux = require('reflux');
 
 var GameActions = Reflux.createActions([
-        "addActors"
+        "addActors",
+        "selectSourceActor"
     ]);
 
 module.exports = GameActions;

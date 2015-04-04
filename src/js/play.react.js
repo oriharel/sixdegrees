@@ -1,6 +1,7 @@
 var React = require('react');
 var Reflux = require('reflux');
 var GameStore = require('./GameStore');
+var GameActions = require('./GameActions');
 var Constants = require('./Constants');
 
 var EdgeStep = React.createClass( {
@@ -88,32 +89,15 @@ var QuerySection = React.createClass( {
 	mixins: [Reflux.connect(GameStore, "gameData")],
 
 	componentDidMount: function() {
-
-		console.log('fetching movies list of '+this.state.gameData.actor1.actorName);
-		var url = "http://api.themoviedb.org/3/person/"+this.state.gameData.actor1.actorId+"/movie_credits";
-
-		$.ajax({
-		      url: url,
-		      dataType: 'json',
-		      data: {
-				api_key: Constants.API_KEY
-			  },
-		      success: function(data) {
-		      	var castedMovied = data.cast;
-
-		      	this.setState({queriedActorMovies: castedMovied})
-		      }.bind(this),
-		      error: function(xhr, status, err) {
-		        console.error(this.props.url, status, err.toString());
-		      }.bind(this)
-	    });
+		console.log('action selectSrouceActor invoked from component');
+		GameActions.selectSourceActor(this.state.gameData.actor1.actorId);
 	},
 
 	render: function() {
 		return (
 			<div className="query-section">
 				<QueriedActor imageUrl={this.state.gameData.actor1.imageUrl} actorName={this.state.gameData.actor1.actorName} />
-				<QueriedActorMovies movies={this.state.queriedActorMovies} />
+				<QueriedActorMovies movies={this.state.gameData.sourceActorMovies} />
 				<QueriedMovie />
 			</div>
 		)
