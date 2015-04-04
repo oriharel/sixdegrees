@@ -132,6 +132,7 @@ body {
 .play-container {
 	display: flex;
   	width: 20%;
+  	min-width: 250px;
   	margin: 0 auto;
 
 	.chain-container {
@@ -141,6 +142,8 @@ body {
 	}
 
 	.actor-chain {
+		cursor: pointer;
+
 		img {
 			width: 80px;
 			height: 120px;	
@@ -172,6 +175,7 @@ body {
 	display: flex;
 	.query-container {
 		margin-top: 20px;
+		flex-basis: 185px;
 	}
 
 	.moviesList {
@@ -182,20 +186,24 @@ body {
 		.movieItem {
 			display: flex;
 			align-items: center;
+			transition: background-color 0.2s;
+			cursor: pointer;
 
 			.movie-image {
-
 				img {
-
 					width: 92px;
 					height: 144px;
 				}
-				
 			}
 
 			.movieDetails {
 				text-align: center;
 				flex: 1;
+			}
+
+			&:hover {
+				background-color: #4d4d4d;
+				color: white;
 			}
 		}
 	}	
