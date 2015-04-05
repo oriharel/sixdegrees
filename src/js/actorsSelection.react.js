@@ -46,7 +46,7 @@ var StartPage = React.createClass({
     	var actor2 = this.state.popularActors[Math.floor(Math.random()*ceiling)];
 
     	var selectedActor1 = {actorName: actor1.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor1.profile_path, actorId: actor1.id};
-    	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path, actorID: actor2.id};
+    	var selectedActor2 = {actorName: actor2.name, imageUrl: 'https://image.tmdb.org/t/p/w185'+actor2.profile_path, actorId: actor2.id};
 
 		this.setState({actor1: selectedActor1, actor2: selectedActor2});
 		GameActions.addActors({actor1: selectedActor1, actor2: selectedActor2});

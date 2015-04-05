@@ -14,7 +14,39 @@ var GameStore = Reflux.createStore({
 		console.log('setting new actors '+data.actor1.actorName+' '+data.actor2.actorName);
 		localStorage.setItem(this.localStorageKey, JSON.stringify(data));
 		this.gameData = data;
+		GameActions.selectSourceActor(data.actor1.actorId);
 		this.trigger(data);
+	},
+
+	onSelectMovie: function(movieId) {
+		var url = "http://api.themoviedb.org/3/movie/"+movieId+"/credits";
+		var that = this;
+
+		$.ajax({
+		      url: url,
+		      dataType: 'json',
+		      data: {
+				api_key: Constants.API_KEY
+			  },
+		      success: function(data) {
+		      	var movieCast = data.cast, unsortedList;
+
+		      	unsortedList = movieCast.map(function(actor) {
+		      		return {
+		      			actorId: actor.id,
+		      			actorName: actor.name,
+		      			actorImage: 'https://image.tmdb.org/t/p/w185'+actor.profile_path
+		      		}
+		      	});
+
+		      	that.gameData.selectedMovieCast = unsortedList;
+		      	that.trigger(that.gameData);
+
+		      }.bind(this),
+		      error: function(xhr, status, err) {
+		        console.error(this.props.url, status, err.toString());
+		      }.bind(this)
+	    });
 	},
 
 	onSelectSourceActor: function(actorId) {
