@@ -14,8 +14,25 @@ var GameStore = Reflux.createStore({
 		console.log('setting new actors '+data.actor1.actorName+' '+data.actor2.actorName);
 		localStorage.setItem(this.localStorageKey, JSON.stringify(data));
 		this.gameData = data;
-		// GameActions.selectSourceActor(data.actor1.actorId);
 		this.trigger(data);
+	},
+
+	update: function() {
+		localStorage.setItem(this.localStorageKey, JSON.stringify(this.gameData));
+	},
+
+	onAddStep: function(actor, movie) {
+		console.log('adding step '+JSON.stringify(actor));
+		this.gameData.chain.push({movie: movie, actor: actor});
+		this.update();
+		this.trigger(this.gameData);
+	},
+
+	onClearChain: function() {
+		console.log('clearing chain');
+		this.gameData.chain = [];
+		this.update();
+		this.trigger(this.gameData);
 	},
 
 	onSelectMovie: function(movieId) {
@@ -89,6 +106,8 @@ var GameStore = Reflux.createStore({
 		        console.error(this.props.url, status, err.toString());
 		      }.bind(this)
 	    });
+
+		this.gameData.selectedMovieCast = [];
 	},
 
 	getInitialState: function() {

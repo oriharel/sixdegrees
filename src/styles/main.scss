@@ -209,6 +209,32 @@ body {
 	}	
 }
 
+	
+
+  	.castList {
+  		list-style: none;
+  		height: 610px;
+  		overflow-y: auto;
+
+  		.actorItem {
+  			display: flex;
+  			align-items: center;
+  			cursor: pointer;
+  			.actor-image {
+  				img {
+  					max-width: 80px;
+  				}
+	  			
+	  		}
+	  		.actorDetails {
+	  			text-align: center;
+	  			flex: 1;
+	  		}
+  		}
+
+  		
+  	}
+
 
 
 .icon-clear {

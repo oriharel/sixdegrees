@@ -25,13 +25,10 @@ var Chain = React.createClass({
 	},
 
 	render: function() {
-		// var stepComponents = this.state.gameData.steps.map(function(step) {
-			// return (<Step id={step.id} />);
-		// })
 		return (
 				<div className="play-container">
 					<div className="actor-chain">
-						<img src={this.state.gameData.actor1.imageUrl}/>
+						<img src={this.state.gameData.actor1.actorImage}/>
 						<div className="chain-actor-name">{this.state.gameData.actor1.actorName}</div>
 					</div>
 					
@@ -40,7 +37,7 @@ var Chain = React.createClass({
 					</div>
 					<EdgeStep />
 					<div className="actor-chain" onClick={this.onActorChainClick}>
-						<img src={this.state.gameData.actor2.imageUrl}/>
+						<img src={this.state.gameData.actor2.actorImage}/>
 						<div className="chain-actor-name">{this.state.gameData.actor2.actorName}</div>
 					</div>
 				</div>
@@ -51,7 +48,7 @@ var Chain = React.createClass({
 var QueriedActor = React.createClass( {
 	render: function() {
 		return (<div className="query-container">
-				<img src={this.props.imageUrl}/>
+				<img src={this.props.actorImage}/>
 				<div className="actor-name">{this.props.actorName}</div>
 			</div>);	
 	}
@@ -59,12 +56,16 @@ var QueriedActor = React.createClass( {
 
 var QueriedActorMovies = React.createClass( {
 
-	mixins: [Reflux.connect(GameStore, "gameData")],
+	// mixins: [Reflux.connect(GameStore, "gameData")],
 
+	onMovieSelectInner: function(movie) {
+		this.props.onMovieSelect(movie);
+	},
 
-	onMovieSelect: function(movieId) {
-		GameActions.selectMovie(movieId);
-
+	componentDidUpdate: function() {
+		console.log('QueriedActorMovies componentDidUpdate');
+		// var node = this.getDOMNode();
+  		// node.scrollTop = 0;
 	},
 
 	render: function() {
@@ -75,7 +76,7 @@ var QueriedActorMovies = React.createClass( {
 			var that = this;
 			moviesElements = this.props.movies.map(function(movie) {
 
-						return (<li className="movieItem" key={movie.id} onClick={that.onMovieSelect.bind(that, movie.id)}>
+						return (<li className="movieItem" key={movie.id} onClick={that.onMovieSelectInner.bind(that, movie)}>
 									<div className="movie-image">
 										<img src={movie.posterPath}></img>
 									</div>
@@ -100,17 +101,23 @@ var QueriedMovie = React.createClass( {
 
 	mixins: [Reflux.connect(GameStore, "gameData")],
 
+	onActorSelect: function(actor) {
+		GameActions.addStep(actor, this.props.movie);
+		GameActions.selectSourceActor(actor.actorId);
+	},
+
 	render: function() {
 		var movieCast = [];
 		if (this.props.cast) {
+			var that = this;
 			movieCast = this.props.cast.map(function(actor) {
 
-						return (<li className="movieItem" key={actor.id}>
-									<div className="movie-image">
+						return (<li className="actorItem" key={actor.id} onClick={that.onActorSelect.bind(that, actor)}>
+									<div className="actor-image">
 										<img src={actor.actorImage}></img>
 									</div>
-									<div className="movieDetails">
-										<div className="movie-title">{actor.actorName}</div>
+									<div className="actorDetails">
+										<div className="actor-title">{actor.actorName}</div>
 									</div>
 									
 								</li>);
@@ -119,12 +126,10 @@ var QueriedMovie = React.createClass( {
 		else {
 			movieCast = (<li className="no-movie-item" key="no-movie-key">No Cast</li>);
 		}
-		return (<div>
-					<div className="movie-div"></div>
+		return (
 					<div className="movie-cast-div">
 						<ul className="castList">{movieCast}</ul>
 					</div>
-				</div>
 				)
 	}
 })
@@ -132,17 +137,31 @@ var QueriedMovie = React.createClass( {
 var QuerySection = React.createClass( {
 	mixins: [Reflux.connect(GameStore, "gameData")],
 
+	getInitialState: function() {
+    	return {selectedMovie: ""};
+  	},	
+
+	onMovieSelect: function(movie) {
+		GameActions.selectMovie(movie.id);
+		this.setState({selectedMovie: movie});
+	},
+
 	componentDidMount: function() {
 		console.log('action selectSrouceActor invoked from component');
-		GameActions.selectSourceActor(this.state.gameData.actor1.actorId);
+		var lastChainIndex = this.state.gameData.chain.length-1;
+		GameActions.selectSourceActor(this.state.gameData.chain[lastChainIndex].actor.actorId);
 	},
 
 	render: function() {
+		var lastChainIndex = this.state.gameData.chain.length-1;
+		console.log('latest chain index is '+lastChainIndex);
+		var lastChainActor = this.state.gameData.chain[lastChainIndex].actor;
+		console.log('latest chain actor is '+JSON.stringify(lastChainActor));
 		return (
 			<div className="query-section">
-				<QueriedActor imageUrl={this.state.gameData.actor1.imageUrl} actorName={this.state.gameData.actor1.actorName} />
-				<QueriedActorMovies movies={this.state.gameData.sourceActorMovies} />
-				<QueriedMovie cast={this.state.gameData.selectedMovieCast}/>
+				<QueriedActor actorImage={lastChainActor.actorImage} actorName={lastChainActor.actorName} />
+				<QueriedActorMovies movies={this.state.gameData.sourceActorMovies} onMovieSelect={this.onMovieSelect}/>
+				<QueriedMovie cast={this.state.gameData.selectedMovieCast} movie={this.state.selectedMovie}/>
 			</div>
 		)
 	}

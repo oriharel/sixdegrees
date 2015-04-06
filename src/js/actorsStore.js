@@ -16,7 +16,7 @@ var ActorsStore = Reflux.createStore({
 			this.popularActors = [];
 		}
 
-		var existingPopular = [];
+		var existingPopular = [], that = this;
 		//TODO - obviesly need to cache stuff here and load quickly
   		for (var i = 1; i < 50; i++) {
   			$.ajax({
@@ -33,6 +33,7 @@ var ActorsStore = Reflux.createStore({
 		        	console.log('saving popular actors list');
 		        	var toStore = JSON.stringify(existingPopular);
 		        	localStorage.setItem(this.localStorageKey, toStore);
+		        	that.trigger(existingPopular);
 		        }
 		      }.bind(this),
 		      error: function(xhr, status, err) {

@@ -3,7 +3,9 @@ var Reflux = require('reflux');
 var GameActions = Reflux.createActions([
         "addActors",
         "selectSourceActor",
-        "selectMovie"
+        "selectMovie",
+        "clearChain",
+        "addStep"
     ]);
 
 
