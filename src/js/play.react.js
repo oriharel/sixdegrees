@@ -21,6 +21,7 @@ var Chain = React.createClass({
 
 	onActorChainClick: function() {
 		GameActions.addActors({actor1: this.state.gameData.actor2, actor2: this.state.gameData.actor1});
+		GameActions.selectSourceActor(this.state.gameData.actor2.actorId);
 	},
 
 	render: function() {
@@ -59,7 +60,7 @@ var QueriedActor = React.createClass( {
 var QueriedActorMovies = React.createClass( {
 
 	mixins: [Reflux.connect(GameStore, "gameData")],
-	
+
 
 	onMovieSelect: function(movieId) {
 		GameActions.selectMovie(movieId);
@@ -133,7 +134,7 @@ var QuerySection = React.createClass( {
 
 	componentDidMount: function() {
 		console.log('action selectSrouceActor invoked from component');
-		// GameActions.selectSourceActor(this.state.gameData.actor1.actorId);
+		GameActions.selectSourceActor(this.state.gameData.actor1.actorId);
 	},
 
 	render: function() {

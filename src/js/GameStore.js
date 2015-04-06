@@ -14,14 +14,14 @@ var GameStore = Reflux.createStore({
 		console.log('setting new actors '+data.actor1.actorName+' '+data.actor2.actorName);
 		localStorage.setItem(this.localStorageKey, JSON.stringify(data));
 		this.gameData = data;
-		GameActions.selectSourceActor(data.actor1.actorId);
+		// GameActions.selectSourceActor(data.actor1.actorId);
 		this.trigger(data);
 	},
 
 	onSelectMovie: function(movieId) {
 		var url = "http://api.themoviedb.org/3/movie/"+movieId+"/credits";
 		var that = this;
-
+		console.log('fetching actors for movieId '+movieId);
 		$.ajax({
 		      url: url,
 		      dataType: 'json',
@@ -52,7 +52,7 @@ var GameStore = Reflux.createStore({
 	onSelectSourceActor: function(actorId) {
 		var url = "http://api.themoviedb.org/3/person/"+actorId+"/movie_credits";
 		var that = this;
-
+		console.log('fetching movies for actorId '+actorId);
 		$.ajax({
 		      url: url,
 		      dataType: 'json',
