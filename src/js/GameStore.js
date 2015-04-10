@@ -12,12 +12,15 @@ var GameStore = Reflux.createStore({
 	onAddActors: function(data) {
 
 		console.log('setting new actors '+data.actor1.actorName+' '+data.actor2.actorName);
-		localStorage.setItem(this.localStorageKey, JSON.stringify(data));
 		this.gameData = data;
+		this.update();
 		this.trigger(data);
 	},
 
 	update: function() {
+		if (!this.gameData.chain) {
+			this.gameData.chain = [];
+		}
 		localStorage.setItem(this.localStorageKey, JSON.stringify(this.gameData));
 	},
 

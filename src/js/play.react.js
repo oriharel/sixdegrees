@@ -20,8 +20,11 @@ var Chain = React.createClass({
 	mixins: [Reflux.connect(GameStore, "gameData")],
 
 	onActorChainClick: function() {
+		console.log('onActorChainClick started');
+		GameActions.clearChain();
 		GameActions.addActors({actor1: this.state.gameData.actor2, actor2: this.state.gameData.actor1});
 		GameActions.selectSourceActor(this.state.gameData.actor2.actorId);
+		GameActions.addStep(this.state.gameData.actor2);
 	},
 
 	render: function() {
@@ -102,6 +105,7 @@ var QueriedMovie = React.createClass( {
 	mixins: [Reflux.connect(GameStore, "gameData")],
 
 	onActorSelect: function(actor) {
+		console.log('onActorSelect started');
 		GameActions.addStep(actor, this.props.movie);
 		GameActions.selectSourceActor(actor.actorId);
 	},
@@ -153,17 +157,26 @@ var QuerySection = React.createClass( {
 	},
 
 	render: function() {
+		console.log('QuerySection render started');
 		var lastChainIndex = this.state.gameData.chain.length-1;
 		console.log('latest chain index is '+lastChainIndex);
-		var lastChainActor = this.state.gameData.chain[lastChainIndex].actor;
-		console.log('latest chain actor is '+JSON.stringify(lastChainActor));
-		return (
-			<div className="query-section">
-				<QueriedActor actorImage={lastChainActor.actorImage} actorName={lastChainActor.actorName} />
-				<QueriedActorMovies movies={this.state.gameData.sourceActorMovies} onMovieSelect={this.onMovieSelect}/>
-				<QueriedMovie cast={this.state.gameData.selectedMovieCast} movie={this.state.selectedMovie}/>
-			</div>
-		)
+		if (lastChainIndex > -1) {
+			var lastChainActor = this.state.gameData.chain[lastChainIndex].actor;
+			console.log('latest chain actor is '+JSON.stringify(lastChainActor));	
+
+			return (
+				<div className="query-section">
+					<QueriedActor actorImage={lastChainActor.actorImage} actorName={lastChainActor.actorName} />
+					<QueriedActorMovies movies={this.state.gameData.sourceActorMovies} onMovieSelect={this.onMovieSelect}/>
+					<QueriedMovie cast={this.state.gameData.selectedMovieCast} movie={this.state.selectedMovie}/>
+				</div>
+			)
+		}
+		else {
+			return (<div></div>)
+		}
+		
+		
 	}
 })
 
